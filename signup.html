@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+    function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- Loding font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,700" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" type="text/css" href="assets/css/styles.css">
+
+    <link rel="stylesheet" href="assets/vendor/toastr-master/toastr.min.css">
+    <title>Signup</title>
+
+</head>
+<body>
+
+<!-- Backgrounds -->
+
+<div id="login-bg" class="container-fluid">
+
+    <div class="bg-img"></div>
+    <div class="bg-color"></div>
+</div>
+
+<!-- End Backgrounds -->
+
+<nav class="navbar navbar-expand-md fixed-top navbar-dark">
+    <a class="navbar-brand" href="index.php"><b><font color = "black">Florist</font></b></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+<!--            <li class="nav-item active">-->
+<!--                <a class="nav-link" href="index.html"><b><font color = "black">Home <span class="sr-only">(current)</span></font></b></a>-->
+<!--            </li>-->
+        </ul>
+    </div>
+</nav>
+
+<div class="container" id="login">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="login">
+
+                <h1>Sign up</h1>
+
+                <!-- Loging form -->
+
+                <form id="form2" name="form2" method="post" action="forms/api.php?action=signup">
+<!--                <form  name="signForm" method="post"  action="signup.php" >-->
+
+                    <div class="form-group">
+                        <select style="float: left; display: inline-block;width: 45%" class="form-control" name="area" id="area">
+                            <option value="">Select</option>
+                        </select>
+                        <input class="form-control" style="float: right; display: inline-block;width: 45%;padding: 15px 30px;" type="text" placeholder="Post code" name="postcode" required>
+                    </div>
+                    <div style="clear: both;padding-top: 10px;"></div>
+
+                    <div class="form-group">
+                        <input type="text"  class="form-control" id="username" placeholder="Enter name" name="username">
+
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" name="email">
+
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="password" placeholder="Password" name="password">
+                    </div>
+                    <!--  <div class="form-group">
+                          <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Confirm Password" name="password2">
+                        </div> -->
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="question" placeholder="Enter security Question" name="security_question">
+
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="answer" placeholder="Enter security question answer" name="security_answer">
+
+                    </div>
+                    <div class="form-check">
+                        <label class="switch">
+                            <input type="checkbox"></label>
+                    </div>
+                    <button type="button" id="reg-btn" name="submit" value="submit" class="btn btn-lg btn-block btn-success">Create account</button>
+                </form>  
+
+            </div>
+
+
+            <!-- End Loging form -->
+
+        </div>
+    </div>
+</div>
+
+
+<script src="assets/vendor/jquery/jquery.min.js"></script>
+<script src="assets/vendor/toastr-master/toastr.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#reg-btn').click(function () {
+            form = $('#form2'),
+                    url=form.attr('action'),
+                    data=form.serializeArray(),
+                    username = $('#username').val(),
+                    password = $('#password').val(),
+                    email = $('#email').val(),
+                    question = $('#question').val(),
+                    answer = $('#answer').val()
+            if(username==''||password==''){
+                toastr.error('Username and password are required.')
+                return false
+            }
+            if(email==''){
+                toastr.error('Email required.')
+                return false
+            }
+            if(question==''||answer==''){
+                toastr.error('Security question and answer are required.')
+                return false
+            }
+            $.post(url,data,function(resp){
+                resp  = JSON.parse(resp);
+                if(resp.status==true){
+                    toastr.success(resp.message)
+                    setTimeout(function () {
+                        location.href='login.html';
+                    },1500)
+                }
+                else{
+                    toastr.error(resp.message)
+                }
+            })
+        })
+
+
+
+        $.get("forms/api.php?action=get_region",function (r) {
+            $("#area").html(r)
+        })
+    })
+</script>
+</body>
+</html>
